@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>響鳴-Kyoumei- - NFT Project</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+      overscroll-behavior-y: none;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      width: 100%;
+      overflow-x: hidden;
+      overscroll-behavior-y: none;
+    }
+
+    .with-sticky-header {
+      margin-top: 0;
+      padding-top: 0;
+    }
+
+    .protected-image-wrapper {
+      position: relative;
+    }
+
+    .no-save-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.01);
+      cursor: not-allowed;
+    }
+
+    .coming-soon-card .collection-info {
+      display: none;
+    }
+
+    /* Mobile Navigation */
+    .mobile-menu {
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .mobile-menu.active {
+      transform: translateX(0);
+    }
+
+    /* Enhanced touch targets for mobile */
+    @media (max-width: 768px) {
+
+      /* Improve carousel scroll on mobile */
+      #carousel {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #carousel>div>div {
+        scroll-snap-align: start;
+      }
+
+      /* Better touch targets */
+      button,
+      a {
+        min-height: 44px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #carousel {
+        overflow-x: hidden;
+        scroll-snap-type: none;
+        display: flex;
+        justify-content: center;
+      }
+
+      #carousel > div {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      #carousel > div > div {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      /* Hide cards beyond 4th initially on mobile */
+      #carousel > div > div:nth-child(n+5) {
+        display: none;
+      }
+
+      #carousel > div > div.show-card {
+        display: flex;
+      }
+
+      #scrollLeft,
+      #scrollRight {
+        display: none;
+      }
+    }
+
+    /* Smooth animations */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#3713ec",
+            "background-light": "#f6f6f8",
+            "background-dark": "#131022",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-white">
+  <div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+    <div class="layout-container flex h-full grow flex-col">
+      <div class="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-5">
+        <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+          <!-- TopNavBar -->
+          <header
+            class="flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 px-4 sm:px-6 py-3 md:py-4 fixed top-0 left-0 right-0 bg-background-dark/95 backdrop-blur-md z-50">
+            <div class="flex items-center gap-4 text-white">
+              <h2 class="text-white text-base sm:text-lg font-bold leading-tight tracking-[-0.015em]">響鳴-Kyoumei-</h2>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex flex-1 justify-end gap-8">
+              <div class="flex items-center gap-9">
+                <a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors"
+                  href="#ourVision">Vision</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors"
+                  href="#featuredCollections">Collection</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-primary transition-colors"
+                  href="#community">Community</a>
+              </div>
+              <a href="https://opensea.io/ja/collection/xiang-ming-kyoumei-214" target="_blank"
+                rel="noopener noreferrer"
+                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-opacity-80 transition-all">
+                <span class="truncate">OpenSea</span>
+              </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobileMenuBtn" class="md:hidden flex items-center justify-center w-10 h-10 text-white"
+              aria-label="Toggle menu">
+              <svg id="menuIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+              </svg>
+              <svg id="closeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </header>
+
+          <!-- Mobile Navigation Menu -->
+          <div id="mobileMenu"
+            class="mobile-menu fixed top-[57px] md:top-[65px] right-0 w-64 h-[calc(100vh-57px)] md:h-[calc(100vh-65px)] bg-background-dark/98 backdrop-blur-md border-l border-white/10 z-40 md:hidden">
+            <nav class="flex flex-col p-6 gap-6">
+              <a class="text-white text-lg font-medium leading-normal hover:text-primary transition-colors py-2"
+                href="#ourVision" onclick="closeMobileMenu()">Vision</a>
+              <a class="text-white text-lg font-medium leading-normal hover:text-primary transition-colors py-2"
+                href="#featuredCollections" onclick="closeMobileMenu()">Collection</a>
+              <a class="text-white text-lg font-medium leading-normal hover:text-primary transition-colors py-2"
+                href="#community" onclick="closeMobileMenu()">Community</a>
+              <a href="https://opensea.io/ja/collection/xiang-ming-kyoumei-214" target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center justify-center rounded-lg h-12 px-4 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-80 transition-all mt-4">
+                <span class="truncate">OpenSea</span>
+              </a>
+            </nav>
+          </div>
+          <!-- HeroSection -->
+          <main class="flex flex-col flex-1 with-sticky-header pt-[114px] md:pt-[65px]">
+            <div
+              class="w-full min-h-[calc(100svh-114px)] md:min-h-screen flex items-center justify-center text-center px-4">
+              <div
+                class="relative flex min-h-[350px] sm:min-h-[480px] flex-col gap-4 sm:gap-6 bg-cover bg-center bg-no-repeat items-center justify-center p-4 sm:p-6 md:p-8 w-full"
+                data-alt="Anime-style girl standing on a starry path under the night sky"
+                style='background-image: linear-gradient(rgba(19, 16, 34, 0.6) 0%, rgba(19, 16, 34, 1) 100%), url("img/main.jpg");'>
+                <div class="flex flex-col gap-3 sm:gap-4 items-center">
+                  <h1
+                    class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-[-0.033em] px-4">
+                    響鳴-Kyoumei-</h1>
+                  <h2 class="text-white/80 text-sm sm:text-base md:text-lg font-normal leading-normal px-4">Where Art
+                    Meets the Ether
+                  </h2>
+                </div>
+                <a href="https://opensea.io/ja/collection/xiang-ming-kyoumei-214" target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-12 sm:h-14 px-6 sm:px-8 bg-primary text-white text-base sm:text-lg font-bold leading-normal tracking-[0.015em] hover:bg-opacity-80 active:scale-95 transition-all">
+                  <span class="sr-only">OpenSea</span>
+                  <svg class="h-6 w-6" viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <g clip-path="url(#clip0)">
+                      <path
+                        d="M252.072 212.292C245.826 220.662 232.686 234.558 225.378 234.558H191.412V212.274H218.466C222.336 212.274 226.026 210.708 228.69 207.954C242.586 193.554 250.614 176.418 250.614 158.04C250.614 126.684 227.178 98.964 191.394 82.26V67.284C191.394 60.84 186.174 55.62 179.73 55.62C173.286 55.62 168.066 60.84 168.066 67.284V73.494C158.04 70.56 147.42 68.328 136.332 67.05C154.692 86.994 165.906 113.67 165.906 142.92C165.906 169.146 156.942 193.23 141.876 212.31H168.066V234.63H129.726C124.542 234.63 120.33 230.436 120.33 225.234V215.478C120.33 213.768 118.944 212.364 117.216 212.364H66.672C65.682 212.364 64.836 213.174 64.836 214.164C64.8 254.088 96.39 284.058 134.172 284.058H240.822C266.382 284.058 277.812 251.298 292.788 230.454C298.602 222.39 312.552 215.91 316.782 214.11C317.556 213.786 318.006 213.066 318.006 212.22V199.26C318.006 197.946 316.71 196.956 315.432 197.316C315.432 197.316 253.782 211.482 253.062 211.68C252.342 211.896 252.072 212.31 252.072 212.31V212.292Z"
+                        fill="white" />
+                      <path
+                        d="M146.16 142.83C146.16 122.724 139.266 104.22 127.746 89.586L69.732 189.972H132.138C141.012 176.436 146.178 160.236 146.178 142.848L146.16 142.83Z"
+                        fill="white" />
+                      <path
+                        d="M181.566 0C80.91 -0.828 -0.828 80.91 0 181.566 0.846 279.306 80.694 359.172 178.416 359.982 279.072 360.846 360.846 279.072 359.982 178.416 359.172 80.712 279.306 0.846 181.566 0ZM127.746 89.586C139.266 104.22 146.16 122.742 146.16 142.83 146.16 160.236 140.994 176.436 132.12 189.954H69.714L127.728 89.568 127.746 89.586ZM318.006 199.242V212.202C318.006 213.048 317.556 213.768 316.782 214.092 312.552 215.892 298.602 222.372 292.788 230.436 277.812 251.28 266.382 284.04 240.822 284.04H134.172C96.408 284.04 64.818 254.07 64.836 214.146 64.836 213.156 65.682 212.346 66.672 212.346H117.216C118.962 212.346 120.33 213.75 120.33 215.46V225.216C120.33 230.4 124.524 234.612 129.726 234.612H168.066V212.292H141.876C156.942 193.212 165.906 169.128 165.906 142.902 165.906 113.652 154.692 86.976 136.332 67.032 147.438 68.328 158.058 70.542 168.066 73.476V67.266C168.066 60.822 173.286 55.602 179.73 55.602 186.174 55.602 191.394 60.822 191.394 67.266V82.242C227.178 98.946 250.614 126.666 250.614 158.022 250.614 176.418 242.568 193.536 228.69 207.936 226.026 210.69 222.336 212.256 218.466 212.256H191.412V234.54H225.378C232.704 234.54 245.844 220.644 252.072 212.274 252.072 212.274 252.342 211.86 253.062 211.644 253.782 211.428 315.432 197.28 315.432 197.28 316.728 196.92 318.006 197.91 318.006 199.224V199.242Z"
+                        fill="#0086FF" />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0">
+                        <rect width="360" height="360" fill="white" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <span class="truncate">OpenSea</span>
+                </a>
+              </div>
+            </div>
+            <!-- FeatureSection (Vision) -->
+            <div id="ourVision" class="flex flex-col gap-8 sm:gap-10 px-4 py-12 sm:py-16 md:py-24 @container">
+              <div class="grid md:grid-cols-2 gap-8 sm:gap-10 md:gap-16 items-center">
+                <div class="flex flex-col gap-3 sm:gap-4">
+                  <h2
+                    class="text-white tracking-light text-2xl sm:text-[32px] md:text-4xl font-bold leading-tight @[480px]:font-black @[480px]:tracking-[-0.033em] max-w-[720px]">
+                    Our Vision</h2>
+                  <p class="text-white/70 text-sm sm:text-base font-normal leading-relaxed max-w-[720px]">A
+                    one-of-a-kind
+                    audio-visual
+                    art NFT where image and sound intertwine. Analog, digital, AI—all boundaries dissolve, leaving only
+                    pure sensibility to take form. This is a work born in such an era. The day I canceled my
+                    subscription,
+                    silence suddenly arrived. To never forget that sense of loss, I crystallized sound and light. A
+                    fragment of this moment, for your collection.</p>
+                </div>
+                <div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg"
+                  data-alt="Abstract graphic representing the project's vision, with glowing purple and blue lines forming a network"
+                  style='background-image: url("img/our.png");'>
+                </div>
+              </div>
+            </div>
+            <!-- SectionHeader -->
+            <div id="featuredCollections" class="flex items-center justify-between px-4 pb-3 pt-5 sm:pt-8">
+              <h2 class="text-white text-xl sm:text-[22px] md:text-3xl font-bold leading-tight tracking-[-0.015em]">
+                Featured
+                Collections</h2>
+              <div class="flex gap-1 sm:gap-2">
+                <button id="scrollLeft"
+                  class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/10 text-white hover:bg-white/20 active:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                </button>
+                <button id="scrollRight"
+                  class="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/10 text-white hover:bg-white/20 active:bg-white/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <!-- Carousel -->
+            <div class="relative">
+              <div id="carousel"
+                class="flex overflow-x-auto scroll-smooth [-ms-scrollbar-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div class="flex items-stretch p-3 sm:p-4 gap-3 sm:gap-4 w-full justify-center sm:justify-start">
+                  <div
+                    class="flex h-full flex-1 flex-col gap-3 sm:gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-[240px] sm:min-w-60 hover:transform hover:-translate-y-1 transition-transform active:scale-[0.98]">
+                    <div id="featuredImageCard"
+                      class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-primary"
+                      tabindex="0" role="button" aria-label="Moonlight Rail / Starry Sea Diver artwork"
+                      style='background-image: url("img/Moonlight Rail : Starry Sea Diver.png");'>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between p-3 sm:p-4 pt-0 gap-3 sm:gap-4">
+                      <div class="collection-info">
+                        <p class="text-white text-sm sm:text-base font-medium leading-normal">Moonlight Rail / Starry
+                          Sea Diver</p>
+                        <p class="text-[#9b92c9] text-xs sm:text-sm font-normal leading-normal">Trait: Audio-Visual NFT
+                          /
+                          Moonlight-Sea Theme / Supply 2100</p>
+                        <div class="mt-2 space-y-1">
+                          <div class="flex items-center justify-between text-xs text-[#9b92c9]">
+                            <span>Sold</span>
+                            <span id="soldText">0 / 2100</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+                            <div id="soldBar" class="h-full bg-primary" style="width: 0%"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <a href="https://opensea.io/ja/item/hyperevm/0x3e9452a9875d1d8f9f8b93423b49928b643f195d/1"
+                        target="_blank" rel="noopener noreferrer"
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 sm:h-11 px-4 bg-[#292348] text-white text-xs sm:text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary active:bg-primary/80 transition-colors">
+                        <span class="truncate">View Details</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div
+                    class="flex h-full flex-1 flex-col gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60 hover:transform hover:-translate-y-1 transition-transform coming-soon-card">
+                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col"
+                      data-alt="NFT artwork of a Shadow Weaver with a void cloak"
+                      style='background-image: url("img/coming-soon.svg");'>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                      <div class="collection-info">
+                        <p class="text-white text-base font-medium leading-normal">Shadow Weaver</p>
+                        <p class="text-[#9b92c9] text-sm font-normal leading-normal">Trait: Void Cloak</p>
+                      </div>
+                      <button
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#292348] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary transition-colors">
+                        <span class="truncate">View Details</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="flex h-full flex-1 flex-col gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60 hover:transform hover:-translate-y-1 transition-transform coming-soon-card">
+                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col"
+                      data-alt="NFT artwork of an Astral Dreamer forged from stars"
+                      style='background-image: url("img/coming-soon.svg");'>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                      <div class="collection-info">
+                        <p class="text-white text-base font-medium leading-normal">Astral Dreamer</p>
+                        <p class="text-[#9b92c9] text-sm font-normal leading-normal">Trait: Star Forged</p>
+                      </div>
+                      <button
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#292348] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary transition-colors">
+                        <span class="truncate">View Details</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="flex h-full flex-1 flex-col gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60 hover:transform hover:-translate-y-1 transition-transform coming-soon-card">
+                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col"
+                      data-alt="NFT artwork of an Ethernal Golem with an arcane core"
+                      style='background-image: url("img/coming-soon.svg");'>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                      <div class="collection-info">
+                        <p class="text-white text-base font-medium leading-normal">Ethernal Golem</p>
+                        <p class="text-[#9b92c9] text-sm font-normal leading-normal">Trait: Arcane Core</p>
+                      </div>
+                      <button
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#292348] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary transition-colors">
+                        <span class="truncate">View Details</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="flex h-full flex-1 flex-col gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60 hover:transform hover:-translate-y-1 transition-transform coming-soon-card">
+                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col"
+                      data-alt="NFT artwork of a Mystic Oracle with crystal vision"
+                      style='background-image: url("img/coming-soon.svg");'>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                      <div class="collection-info">
+                        <p class="text-white text-base font-medium leading-normal">Mystic Oracle</p>
+                        <p class="text-[#9b92c9] text-sm font-normal leading-normal">Trait: Crystal Vision</p>
+                      </div>
+                      <button
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#292348] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary transition-colors">
+                        <span class="truncate">View Details</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="flex h-full flex-1 flex-col gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60 hover:transform hover:-translate-y-1 transition-transform coming-soon-card">
+                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col"
+                      data-alt="NFT artwork of a Void Walker with dimensional rift"
+                      style='background-image: url("img/coming-soon.svg");'>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                      <div class="collection-info">
+                        <p class="text-white text-base font-medium leading-normal">Void Walker</p>
+                        <p class="text-[#9b92c9] text-sm font-normal leading-normal">Trait: Dimensional Rift</p>
+                      </div>
+                      <button
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#292348] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary transition-colors">
+                        <span class="truncate">View Details</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="flex h-full flex-1 flex-col gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60 hover:transform hover:-translate-y-1 transition-transform coming-soon-card">
+                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col"
+                      data-alt="NFT artwork of a Cosmic Sage with stellar wisdom"
+                      style='background-image: url("img/coming-soon.svg");'>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                      <div class="collection-info">
+                        <p class="text-white text-base font-medium leading-normal">Cosmic Sage</p>
+                        <p class="text-[#9b92c9] text-sm font-normal leading-normal">Trait: Stellar Wisdom</p>
+                      </div>
+                      <button
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#292348] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary transition-colors">
+                        <span class="truncate">View Details</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Load More / Show Less Buttons (Mobile Only) -->
+              <div id="loadMoreContainer" class="flex justify-center px-4 py-6 sm:hidden">
+                <button id="loadMoreBtn"
+                  class="flex items-center justify-center gap-2 rounded-lg bg-primary h-12 px-8 text-white text-sm font-bold hover:bg-opacity-80 active:scale-95 transition-all w-full max-w-xs">
+                  <span>Load More</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+              </div>
+              <div id="showLessContainer" class="hidden justify-center items-center px-4 py-6 sm:hidden">
+                <button id="showLessBtn"
+                  class="flex items-center justify-center gap-2 rounded-lg bg-white/10 h-12 px-8 text-white text-sm font-bold hover:bg-white/20 active:scale-95 transition-all w-full max-w-xs mx-auto">
+                  <span>Show Less</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                  </svg>
+                </button>
+              </div>
+          </main>
+          <!-- Community CTA Section -->
+          <section id="community" class="w-full px-4 py-12 sm:py-16 md:py-24 text-center">
+            <div class="flex flex-col items-center gap-4 sm:gap-6 max-w-2xl mx-auto">
+              <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">Join Our Journey</h2>
+              <p class="text-sm sm:text-base md:text-lg leading-relaxed text-white/70 px-4">Become a member of our
+                vibrant community to get exclusive
+                access to drops, news, and connect with fellow art enthusiasts and collectors.</p>
+              <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4">
+                <button
+                  class="flex items-center justify-center gap-2 rounded-lg bg-primary/20 h-12 sm:h-14 px-6 sm:px-8 text-white text-sm sm:text-base font-bold hover:bg-primary/30 active:bg-primary/40 transition-colors w-full sm:w-auto">
+                  <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M20.317 4.37a19.792 19.792 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.54 13.54 0 0 0-.608 1.25 17.564 17.564 0 0 0-5.487 0 13.54 13.54 0 0 0-.618-1.249.077.077 0 0 0-.078-.037 19.736 19.736 0 0 0-4.885 1.515.07.07 0 0 0-.032.028C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056 19.94 19.94 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 13.78 13.78 0 0 0 1.226-1.994.076.076 0 0 0-.042-.106 13.174 13.174 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01 14.161 14.161 0 0 0 12.062 0 .074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.04.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.954 19.954 0 0 0 6.002-3.03.077.077 0 0 0 .031-.055c.5-5.177-.838-9.674-3.548-13.66a.061.061 0 0 0-.031-.029ZM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.211 0 2.176 1.095 2.157 2.419 0 1.333-.955 2.419-2.157 2.419Zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419Z">
+                    </path>
+                  </svg>
+                  <span>Join Discord</span>
+                </button>
+                <button
+                  class="flex items-center justify-center gap-2 rounded-lg bg-white/10 h-12 sm:h-14 px-6 sm:px-8 text-white text-sm sm:text-base font-bold hover:bg-white/20 active:bg-white/30 transition-colors w-full sm:w-auto">
+                  <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M15.545 0h5.135L9.47 12.67 21.771 24h-6.199l-4.874-6.356L5.034 24h-5.136l11.408-12.89L-.013 0h6.318l4.515 5.944L15.545 0Z">
+                    </path>
+                  </svg>
+                  <span>Follow on X</span>
+                </button>
+              </div>
+            </div>
+          </section>
+          <!-- Modal -->
+          <div id="imageModal"
+            class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center px-4 hidden z-[60]">
+            <div class="relative max-w-4xl w-full protected-image-wrapper">
+              <button id="closeImageModal"
+                class="absolute -top-4 -right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
+                aria-label="Close image preview">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+              <img src="img/Moonlight Rail : Starry Sea Diver.png" alt="Moonlight Rail / Starry Sea Diver artwork"
+                class="w-full rounded-lg shadow-2xl border border-white/10" draggable="false" />
+              <div class="no-save-overlay" aria-hidden="true"></div>
+            </div>
+          </div>
+          <!-- Footer -->
+          <footer class="w-full border-t border-white/10 mt-8 sm:mt-10">
+            <div class="flex flex-col items-center justify-center text-center gap-2 px-4 py-6 sm:py-8">
+              <p class="text-xs sm:text-sm text-white/50">© 2025 響鳴-Kyoumei-. All rights reserved.</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </main>
+
+  <script>
+    // Mobile menu functions (global scope for onclick handlers)
+    function closeMobileMenu() {
+      const mobileMenu = document.getElementById('mobileMenu');
+      const menuIcon = document.getElementById('menuIcon');
+      const closeIcon = document.getElementById('closeIcon');
+      if (mobileMenu) {
+        mobileMenu.classList.remove('active');
+        if (menuIcon) menuIcon.classList.remove('hidden');
+        if (closeIcon) closeIcon.classList.add('hidden');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const header = document.querySelector('header');
+      const main = document.querySelector('.with-sticky-header');
+      const carousel = document.getElementById('carousel');
+      const scrollLeftBtn = document.getElementById('scrollLeft');
+      const scrollRightBtn = document.getElementById('scrollRight');
+      const featuredImageCard = document.getElementById('featuredImageCard');
+      const imageModal = document.getElementById('imageModal');
+      const closeImageModal = document.getElementById('closeImageModal');
+      const protectedWrapper = document.querySelector('.protected-image-wrapper');
+      const body = document.body;
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const menuIcon = document.getElementById('menuIcon');
+      const closeIcon = document.getElementById('closeIcon');
+
+      // Mobile menu toggle
+      if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', function () {
+          mobileMenu.classList.toggle('active');
+          menuIcon.classList.toggle('hidden');
+          closeIcon.classList.toggle('hidden');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (event) {
+          if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+            closeMobileMenu();
+          }
+        });
+      }
+
+      // Dynamic scroll amount based on viewport
+      function getScrollAmount() {
+        return window.innerWidth < 640 ? 250 : 280;
+      }
+
+      // Load More functionality for mobile
+      const loadMoreBtn = document.getElementById('loadMoreBtn');
+      const loadMoreContainer = document.getElementById('loadMoreContainer');
+      const showLessBtn = document.getElementById('showLessBtn');
+      const showLessContainer = document.getElementById('showLessContainer');
+      let currentVisibleCount = 4;
+
+      if (loadMoreBtn && showLessBtn && carousel) {
+        const allCards = carousel.querySelectorAll(':scope > div > div');
+        const totalCards = allCards.length;
+
+        // Initial check if button should be visible
+        function updateLoadMoreButton() {
+          if (window.innerWidth >= 640) {
+            // Desktop: hide buttons, show all cards
+            if (loadMoreContainer) loadMoreContainer.style.display = 'none';
+            if (showLessContainer) showLessContainer.classList.add('hidden');
+            allCards.forEach(card => card.classList.remove('show-card'));
+          } else {
+            // Mobile: show appropriate button
+            if (currentVisibleCount >= totalCards) {
+              // All cards visible: hide Load More, show Show Less
+              if (loadMoreContainer) loadMoreContainer.style.display = 'none';
+              if (showLessContainer) showLessContainer.classList.remove('hidden');
+            } else if (currentVisibleCount > 4) {
+              // Some cards expanded: show both buttons
+              if (loadMoreContainer) loadMoreContainer.style.display = 'flex';
+              if (showLessContainer) showLessContainer.classList.remove('hidden');
+            } else {
+              // Initial state: show only Load More
+              if (loadMoreContainer) loadMoreContainer.style.display = 'flex';
+              if (showLessContainer) showLessContainer.classList.add('hidden');
+            }
+          }
+        }
+
+        loadMoreBtn.addEventListener('click', function () {
+          // Show next 4 cards
+          const cardsToShow = Array.from(allCards).slice(currentVisibleCount, currentVisibleCount + 4);
+          cardsToShow.forEach(card => {
+            card.classList.add('show-card');
+          });
+          currentVisibleCount += 4;
+
+          // Update button visibility
+          updateLoadMoreButton();
+
+          // Smooth scroll to first newly shown card
+          if (cardsToShow.length > 0) {
+            cardsToShow[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+
+        showLessBtn.addEventListener('click', function () {
+          // Hide all cards beyond the first 4
+          allCards.forEach((card, index) => {
+            if (index >= 4) {
+              card.classList.remove('show-card');
+            }
+          });
+          currentVisibleCount = 4;
+
+          // Update button visibility
+          updateLoadMoreButton();
+
+          // Scroll to Featured Collections section
+          const featuredSection = document.getElementById('featuredCollections');
+          if (featuredSection) {
+            featuredSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+
+        // Update on resize
+        window.addEventListener('resize', updateLoadMoreButton);
+        updateLoadMoreButton();
+      }
+
+      if (carousel && scrollLeftBtn && scrollRightBtn) {
+        // スクロール位置をチェックしてボタンの状態を更新
+        function updateButtonStates() {
+          const isAtStart = carousel.scrollLeft <= 0;
+          const isAtEnd = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth;
+
+          scrollLeftBtn.disabled = isAtStart;
+          scrollRightBtn.disabled = isAtEnd;
+        }
+
+        // 左スクロールボタン
+        scrollLeftBtn.addEventListener('click', function () {
+          carousel.scrollBy({
+            left: -getScrollAmount(),
+            behavior: 'smooth'
+          });
+        });
+
+        // 右スクロールボタン
+        scrollRightBtn.addEventListener('click', function () {
+          carousel.scrollBy({
+            left: getScrollAmount(),
+            behavior: 'smooth'
+          });
+        });
+
+        // スクロール時にボタン状態を更新
+        carousel.addEventListener('scroll', updateButtonStates);
+
+        // 初期状態を設定
+        updateButtonStates();
+      }
+
+      function openModal() {
+        if (!imageModal) return;
+        imageModal.classList.remove('hidden');
+        body.classList.add('overflow-hidden');
+      }
+
+      function closeModal() {
+        if (!imageModal) return;
+        imageModal.classList.add('hidden');
+        body.classList.remove('overflow-hidden');
+      }
+
+      if (featuredImageCard) {
+        featuredImageCard.addEventListener('click', openModal);
+        featuredImageCard.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openModal();
+          }
+        });
+      }
+
+      if (closeImageModal) {
+        closeImageModal.addEventListener('click', closeModal);
+      }
+
+      if (imageModal) {
+        imageModal.addEventListener('click', function (event) {
+          if (event.target === imageModal) {
+            closeModal();
+          }
+        });
+        imageModal.addEventListener('contextmenu', function (event) {
+          event.preventDefault();
+        });
+      }
+
+      if (protectedWrapper) {
+        protectedWrapper.addEventListener('contextmenu', function (event) {
+          event.preventDefault();
+        });
+      }
+
+      // 
+      function syncHeaderPadding() {
+        if (!header || !main) return;
+        main.style.paddingTop = `${header.offsetHeight}px`;
+      }
+
+      syncHeaderPadding();
+      window.addEventListener('resize', () => {
+        if (carousel && scrollLeftBtn && scrollRightBtn) {
+          const isAtStart = carousel.scrollLeft <= 0;
+          const isAtEnd = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth;
+          scrollLeftBtn.disabled = isAtStart;
+          scrollRightBtn.disabled = isAtEnd;
+        }
+        syncHeaderPadding();
+      });
+    });
+
+    // Sold / 2100 インジケーターを更新するためのヘルパー関数
+    function updateSoldStatus(sold, supply = 2100) {
+      const soldText = document.getElementById('soldText');
+      const soldBar = document.getElementById('soldBar');
+
+      if (!soldText || !soldBar) return;
+
+      const safeSupply = supply > 0 ? supply : 1;
+      const ratio = Math.max(0, Math.min(1, sold / safeSupply));
+
+      soldText.textContent = `${sold} / ${safeSupply}`;
+      soldBar.style.width = `${ratio * 100}%`;
+    }
+
+    // 運営ウォレットの保有数から Sold 数を算出して反映するためのヘルパー関数
+    function applyOperatorBalance(operatorBalance, totalSupply = 2100) {
+      const safeSupply = totalSupply > 0 ? totalSupply : 1;
+      const balance = Math.max(0, operatorBalance);
+
+      // Sold = 総供給 - 運営保有数
+      const sold = Math.max(0, safeSupply - balance);
+      updateSoldStatus(sold, safeSupply);
+    }
+
+    // ---------------------------------------------------------------------------
+    // HyperScan(Blockscout) API を使って運営ウォレットのNFT保有数を取得し、
+    // Sold インジケーターに反映するための処理
+    // ---------------------------------------------------------------------------
+
+    // 運営ウォレットとNFTコントラクトの設定
+    const OPERATOR_ADDRESS = '0x56e143ca73d671a8db81879ec6082b43c8ef1320';
+    const CONTRACT_ADDRESS = '0x3e9452A9875d1d8f9F8B93423B49928b643f195d';
+    const TOTAL_SUPPLY = 2100;
+
+    /**
+     * HyperScanのBlockscout APIから運営ウォレットのNFT保有数を取得
+     */
+    async function fetchOperatorBalance() {
+      try {
+        const apiUrl = `https://www.hyperscan.com/api?module=account&action=tokennfttx&address=${OPERATOR_ADDRESS}&contractaddress=${CONTRACT_ADDRESS}&page=1&offset=10000&sort=desc`;
+
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.status === '1' && data.result && Array.isArray(data.result)) {
+          const receivedTokens = data.result.filter(tx =>
+            tx.to && tx.to.toLowerCase() === OPERATOR_ADDRESS.toLowerCase()
+          );
+
+          const sentTokens = data.result.filter(tx =>
+            tx.from && tx.from.toLowerCase() === OPERATOR_ADDRESS.toLowerCase()
+          );
+
+          const operatorBalance = receivedTokens.length - sentTokens.length;
+
+          if (typeof applyOperatorBalance === 'function') {
+            applyOperatorBalance(operatorBalance, TOTAL_SUPPLY);
+          }
+
+          return {
+            success: true,
+            balance: operatorBalance,
+            received: receivedTokens.length,
+            sent: sentTokens.length,
+            totalSupply: TOTAL_SUPPLY,
+          };
+        } else if (data.status === '0' && data.message === 'No transactions found') {
+          if (typeof applyOperatorBalance === 'function') {
+            applyOperatorBalance(0, TOTAL_SUPPLY);
+          }
+
+          return {
+            success: true,
+            balance: 0,
+            received: 0,
+            sent: 0,
+            totalSupply: TOTAL_SUPPLY,
+          };
+        } else {
+          throw new Error(`API Error: ${data.message || 'Unknown error'}`);
+        }
+      } catch (error) {
+        console.error('Failed to fetch operator balance:', error);
+        return {
+          success: false,
+          error: error.message,
+        };
+      }
+    }
+
+    // ページ読み込み時に自動実行（本番: APIから実データを取得）
+    fetchOperatorBalance();
+
+    // デモ用に固定値で Sold を確認したい場合は、以下の行を一時的に有効化してください。
+    // applyOperatorBalance(2100 - 500, TOTAL_SUPPLY); // Sold = 500 / 2100
+  </script>
+
+</body>
+
+</html>

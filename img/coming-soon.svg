@@ -1,0 +1,15 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Coming Soon Placeholder</title>
+  <desc id="desc">Gradient background with Coming Soon text</desc>
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4338ca" />
+      <stop offset="50%" stop-color="#6d28d9" />
+      <stop offset="100%" stop-color="#9333ea" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="36" fill="url(#gradient)" />
+  <rect x="32" y="32" width="448" height="448" rx="28" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="4" stroke-dasharray="12 16" />
+  <text x="50%" y="48%" text-anchor="middle" fill="#ffffff" font-size="56" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="700" letter-spacing="4">COMING</text>
+  <text x="50%" y="68%" text-anchor="middle" fill="#ffffff" font-size="56" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="700" letter-spacing="4">SOON</text>
+</svg>
