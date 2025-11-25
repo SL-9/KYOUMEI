@@ -1,0 +1,102 @@
+html {
+  scroll-behavior: smooth;
+  overscroll-behavior-y: none;
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+.with-sticky-header {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.protected-image-wrapper {
+  position: relative;
+}
+
+.no-save-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.01);
+  cursor: not-allowed;
+}
+
+.coming-soon-card .collection-info {
+  display: none;
+}
+
+/* Mobile Navigation */
+.mobile-menu {
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobile-menu.active {
+  transform: translateX(0);
+}
+
+/* Enhanced touch targets for mobile */
+@media (max-width: 768px) {
+
+  /* Improve carousel scroll on mobile */
+  #carousel {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #carousel>div>div {
+    scroll-snap-align: start;
+  }
+
+  /* Better touch targets */
+  button,
+  a {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  #carousel {
+    overflow-x: hidden;
+    scroll-snap-type: none;
+    display: flex;
+    justify-content: center;
+  }
+
+  #carousel>div {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  #carousel>div>div {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Hide cards beyond 4th initially on mobile */
+  #carousel>div>div:nth-child(n+5) {
+    display: none;
+  }
+
+  #carousel>div>div.show-card {
+    display: flex;
+  }
+
+  #scrollLeft,
+  #scrollRight {
+    display: none;
+  }
+}
+
+/* Smooth animations */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
