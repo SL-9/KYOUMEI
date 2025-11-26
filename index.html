@@ -336,16 +336,100 @@
               </div>
             </div>
           </main>
+          <section id="projectDetailsSection" class="w-full px-4 pt-8 pb-12 sm:pt-12 sm:pb-16 md:pt-16 md:pb-24">
+            <div class="flex flex-col gap-6">
+              <div class="flex flex-col gap-3">
+                <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Project Details</h2>
+                <p class="text-white/70 text-sm sm:text-base leading-relaxed">Tap below to learn about our price
+                  schedule,
+                  terms, disclaimers, and copyright policy.</p>
+              </div>
+              <button id="projectDetailsToggle" aria-expanded="false" aria-controls="projectDetailsContent"
+                class="project-glow-frame flex items-center justify-between gap-3 w-full rounded-2xl border bg-white/5 px-6 py-4 text-left text-white text-base sm:text-lg font-semibold hover:bg-white/10 transition-colors">
+                <span class="flex-1">プロジェクトについて / About the Project</span>
+                <svg id="projectDetailsIcon" class="h-5 w-5 transition-transform duration-200" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div id="projectDetailsContent"
+                class="project-glow-frame hidden w-full rounded-2xl border bg-white/5 px-6 sm:px-8 py-8 text-left space-y-8">
+                <div class="space-y-3">
+                  <h3 class="text-xl font-semibold text-white">販売形式 / Price Schedule</h3>
+                  <p class="text-white/80 text-sm sm:text-base leading-relaxed">
+                    本コレクションは1作品につき全2,100点中、2,000点を販売しています。価格は以下のスケジュールで段階的に上昇します。</p>
+                  <ul class="text-white/80 text-sm sm:text-base leading-relaxed space-y-1">
+                    <li>・1〜300 枚：0.08 HYPE ／枚</li>
+                    <li>・301〜800 枚：0.12 HYPE ／枚</li>
+                    <li>・801〜1,500 枚：0.15 HYPE ／枚</li>
+                    <li>・1,501〜2,000 枚：0.18 HYPE ／枚</li>
+                  </ul>
+                  <p class="text-white/80 text-sm sm:text-base leading-relaxed">This collection offers 2,000 NFTs for
+                    sale out
+                    of a total of 2,100 editions per artwork. Prices increase gradually according to the following
+                    schedule:</p>
+                  <ul class="text-white/80 text-sm sm:text-base leading-relaxed space-y-1">
+                    <li>・#1–300 : 0.08 HYPE each</li>
+                    <li>・#301–800 : 0.12 HYPE each</li>
+                    <li>・#801–1,500 : 0.15 HYPE each</li>
+                    <li>・#1,501–2,000 : 0.18 HYPE each</li>
+                  </ul>
+                </div>
+                <div class="space-y-3">
+                  <h3 class="text-xl font-semibold text-white">利用規約 / Terms</h3>
+                  <ul class="text-white/80 text-sm sm:text-base leading-relaxed space-y-1">
+                    <li>・本NFTはデジタルアート作品であり、購入後の返品・返金は承っておりません。</li>
+                    <li>・ブロックチェーン特性上、取引完了後のキャンセルはできません。</li>
+                    <li>・作品の世界観・設定・表現はアーティストの創作によるものです。</li>
+                    <li>・購入者は自己判断と自己責任のもとで取引を行うものとします。</li>
+                  </ul>
+                  <ul class="text-white/80 text-sm sm:text-base leading-relaxed space-y-1">
+                    <li>・This NFT is a digital art piece, and no returns or refunds will be accepted after purchase.
+                    </li>
+                    <li>・Due to the nature of blockchain, transactions cannot be canceled once completed.</li>
+                    <li>・The worldbuilding, setting, and artistic expression of the作品 are part of the creator’s artistic
+                      vision.</li>
+                    <li>・Buyers participate at their own discretion and responsibility.</li>
+                  </ul>
+                </div>
+                <div class="space-y-3">
+                  <h3 class="text-xl font-semibold text-white">免責事項 / Disclaimer</h3>
+                  <p class="text-white/80 text-sm sm:text-base leading-relaxed">
+                    本プロジェクトはアート作品の提供を目的としており、将来の価値上昇を保証するものではありません。 本NFTの購入・保有・取引に伴う損失や、第三者とのトラブルについて、運営は責任を負いません。
+                    暗号資産およびNFTの価格変動リスクをご理解いただいた上でご参加ください。</p>
+                  <p class="text-white/80 text-sm sm:text-base leading-relaxed">This project aims to provide digital art
+                    and does
+                    not guarantee future value appreciation. The project team is not responsible for any losses,
+                    damages,
+                    or disputes arising from the purchase, holding, or trading of this NFT. Please participate fully
+                    aware
+                    of the risks associated with cryptocurrencies and NFTs.</p>
+                </div>
+                <div class="space-y-3">
+                  <h3 class="text-xl font-semibold text-white">著作権について / Copyright</h3>
+                  <p class="text-white/80 text-sm sm:text-base leading-relaxed">
+                    本作品はAI生成を含むデジタルアートです。著作権およびすべての権利は本プロジェクトの運営に帰属します。購入者は個人利用（SNS投稿・ウォレット表示・プロフィール利用など）に限り使用できます。商用利用をご希望の場合は、別途ご相談ください。
+                  </p>
+                  <p class="text-white/80 text-sm sm:text-base leading-relaxed">This artwork includes AI-generated
+                    elements. All
+                    rights, including usage rights and distribution rights, are retained by the project team. Purchasers
+                    may use the artwork for personal purposes only (such as social media posts, wallet display, or
+                    profile
+                    use). For commercial use, please contact the project team.</p>
+                </div>
+              </div>
+            </div>
+          </section>
           <!-- Community CTA Section -->
-          <section id="community" class="w-full px-4 py-12 sm:py-16 md:py-24 text-center">
+          <section id="community" class="w-full px-4 pb-12 sm:pb-16 md:pb-24 text-center">
             <div class="flex flex-col items-center gap-4 sm:gap-6 max-w-2xl mx-auto">
               <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">Join Our Journey</h2>
               <p class="text-sm sm:text-base md:text-lg leading-relaxed text-white/70 px-4">Become a member of our
-                vibrant community to get exclusive
-                access to drops, news, and connect with fellow art enthusiasts and collectors.</p>
+                vibrant community to get exclusive access to drops, news, and connect with fellow art enthusiasts and
+                collectors.</p>
               <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4">
                 <button
-                  class="flex items-center justify-center gap-2 rounded-lg bg-primary/20 h-12 sm:h-14 px-6 sm:px-8 text-white text-sm sm:text-base font-bold hover:bg-primary/30 active:bg-primary/40 transition-colors w-full sm:w-auto">
+                  class="flex items-center justify-center gap-2 rounded-lg bg-primary/20 h-12 sm:h-14 px-6 sm:px-8 text-white text-sm nh:text-base font-bold hover:bg-primary/30 active:bg-primary/40 transition-colors w-full sm:w-auto">
                   <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg">
                     <path

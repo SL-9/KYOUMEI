@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const mobileMenu = document.getElementById('mobileMenu');
   const menuIcon = document.getElementById('menuIcon');
   const closeIcon = document.getElementById('closeIcon');
+  const projectDetailsToggle = document.getElementById('projectDetailsToggle');
+  const projectDetailsContent = document.getElementById('projectDetailsContent');
+  const projectDetailsIcon = document.getElementById('projectDetailsIcon');
 
   // Mobile menu toggle
   if (mobileMenuBtn && mobileMenu) {
@@ -153,6 +156,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 初期状態を設定
     updateButtonStates();
+  }
+
+  if (projectDetailsToggle && projectDetailsContent) {
+    projectDetailsToggle.addEventListener('click', () => {
+      const isOpen = projectDetailsContent.classList.toggle('hidden') === false;
+      projectDetailsToggle.setAttribute('aria-expanded', String(isOpen));
+      if (projectDetailsIcon) {
+        projectDetailsIcon.classList.toggle('rotate-180', isOpen);
+      }
+      if (isOpen) {
+        projectDetailsContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   }
 
   function openModal() {

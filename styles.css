@@ -10,6 +10,14 @@ body {
   overscroll-behavior-y: none;
 }
 
+.project-glow-frame {
+  border-color: rgba(130, 116, 206, 0.6) !important;
+  box-shadow:
+    0 0 12px rgba(62, 52, 112, 0.45),
+    0 0 30px rgba(62, 52, 112, 0.2);
+  background: linear-gradient(120deg, rgba(41, 35, 72, 0.92), rgba(30, 25, 51, 0.9)) !important;
+}
+
 .with-sticky-header {
   margin-top: 0;
   padding-top: 0;
