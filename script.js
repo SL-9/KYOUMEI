@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const featuredImageCard = document.getElementById('featuredImageCard');
   const imageModal = document.getElementById('imageModal');
   const closeImageModal = document.getElementById('closeImageModal');
+  const candyHeartImageCard = document.getElementById('candyHeartImageCard');
+  const candyHeartModal = document.getElementById('candyHeartModal');
+  const closeCandyHeartModal = document.getElementById('closeCandyHeartModal');
+  const cryptLoveLetterImageCard = document.getElementById('cryptLoveLetterImageCard');
+  const cryptLoveLetterModal = document.getElementById('cryptLoveLetterModal');
+  const closeCryptLoveLetterModal = document.getElementById('closeCryptLoveLetterModal');
   const protectedWrapper = document.querySelector('.protected-image-wrapper');
   const body = document.body;
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -204,6 +210,82 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
     imageModal.addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+    });
+  }
+
+  // Candy Heart modal functions
+  function openCandyHeartModal() {
+    if (!candyHeartModal) return;
+    candyHeartModal.classList.remove('hidden');
+    body.classList.add('overflow-hidden');
+  }
+
+  function closeCandyHeartModalFn() {
+    if (!candyHeartModal) return;
+    candyHeartModal.classList.add('hidden');
+    body.classList.remove('overflow-hidden');
+  }
+
+  if (candyHeartImageCard) {
+    candyHeartImageCard.addEventListener('click', openCandyHeartModal);
+    candyHeartImageCard.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openCandyHeartModal();
+      }
+    });
+  }
+
+  if (closeCandyHeartModal) {
+    closeCandyHeartModal.addEventListener('click', closeCandyHeartModalFn);
+  }
+
+  if (candyHeartModal) {
+    candyHeartModal.addEventListener('click', function (event) {
+      if (event.target === candyHeartModal) {
+        closeCandyHeartModalFn();
+      }
+    });
+    candyHeartModal.addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+    });
+  }
+
+  // Crypt Love Letter modal functions
+  function openCryptLoveLetterModal() {
+    if (!cryptLoveLetterModal) return;
+    cryptLoveLetterModal.classList.remove('hidden');
+    body.classList.add('overflow-hidden');
+  }
+
+  function closeCryptLoveLetterModalFn() {
+    if (!cryptLoveLetterModal) return;
+    cryptLoveLetterModal.classList.add('hidden');
+    body.classList.remove('overflow-hidden');
+  }
+
+  if (cryptLoveLetterImageCard) {
+    cryptLoveLetterImageCard.addEventListener('click', openCryptLoveLetterModal);
+    cryptLoveLetterImageCard.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openCryptLoveLetterModal();
+      }
+    });
+  }
+
+  if (closeCryptLoveLetterModal) {
+    closeCryptLoveLetterModal.addEventListener('click', closeCryptLoveLetterModalFn);
+  }
+
+  if (cryptLoveLetterModal) {
+    cryptLoveLetterModal.addEventListener('click', function (event) {
+      if (event.target === cryptLoveLetterModal) {
+        closeCryptLoveLetterModalFn();
+      }
+    });
+    cryptLoveLetterModal.addEventListener('contextmenu', function (event) {
       event.preventDefault();
     });
   }
