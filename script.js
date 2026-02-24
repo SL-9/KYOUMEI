@@ -304,6 +304,80 @@ document.addEventListener('DOMContentLoaded', function () {
       scrollRightBtn.disabled = isAtEnd;
     }
   });
+
+  // Audio Player functionality
+  const audioPlayers = document.querySelectorAll('.audio-player');
+  let currentAudio = null;
+  let currentPlayer = null;
+
+  audioPlayers.forEach(player => {
+    const playBtn = player.querySelector('.audio-play-btn');
+    const playIcon = player.querySelector('.play-icon');
+    const pauseIcon = player.querySelector('.pause-icon');
+    const timeDisplay = player.querySelector('.audio-time');
+    const audioSrc = player.dataset.audio;
+
+    // Create audio element
+    const audio = new Audio(audioSrc);
+    audio.preload = 'metadata';
+
+    // Format time helper
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Update time display
+    audio.addEventListener('timeupdate', () => {
+      if (timeDisplay) {
+        timeDisplay.textContent = formatTime(audio.currentTime);
+      }
+    });
+
+    // When audio ends
+    audio.addEventListener('ended', () => {
+      player.classList.remove('playing');
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      if (timeDisplay) timeDisplay.textContent = '0:00';
+      currentAudio = null;
+      currentPlayer = null;
+    });
+
+    // Play/Pause toggle
+    playBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      // If another audio is playing, stop it
+      if (currentAudio && currentAudio !== audio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentPlayer.classList.remove('playing');
+        currentPlayer.querySelector('.play-icon').classList.remove('hidden');
+        currentPlayer.querySelector('.pause-icon').classList.add('hidden');
+        const prevTimeDisplay = currentPlayer.querySelector('.audio-time');
+        if (prevTimeDisplay) prevTimeDisplay.textContent = '0:00';
+      }
+
+      if (audio.paused) {
+        audio.play().then(() => {
+          player.classList.add('playing');
+          playIcon.classList.add('hidden');
+          pauseIcon.classList.remove('hidden');
+          currentAudio = audio;
+          currentPlayer = player;
+        }).catch(err => {
+          console.log('Audio playback failed:', err);
+        });
+      } else {
+        audio.pause();
+        player.classList.remove('playing');
+        playIcon.classList.remove('hidden');
+        pauseIcon.classList.add('hidden');
+      }
+    });
+  });
 });
 
 // Sold / 2100 インジケーターを更新するためのヘルパー関数
