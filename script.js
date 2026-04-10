@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const cryptLoveLetterImageCard = document.getElementById('cryptLoveLetterImageCard');
   const cryptLoveLetterModal = document.getElementById('cryptLoveLetterModal');
   const closeCryptLoveLetterModal = document.getElementById('closeCryptLoveLetterModal');
+  const twinkleGroovinImageCard = document.getElementById('twinkleGroovinImageCard');
+  const twinkleGroovinModal = document.getElementById('twinkleGroovinModal');
+  const closeTwinkleGroovinModalBtn = document.getElementById('closeTwinkleGroovinModal');
   const protectedWrapper = document.querySelector('.protected-image-wrapper');
   const body = document.body;
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -286,6 +289,44 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
     cryptLoveLetterModal.addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+    });
+  }
+
+  // Twinkle Groovin modal functions
+  function openTwinkleGroovinModal() {
+    if (!twinkleGroovinModal) return;
+    twinkleGroovinModal.classList.remove('hidden');
+    body.classList.add('overflow-hidden');
+  }
+
+  function closeTwinkleGroovinModalFn() {
+    if (!twinkleGroovinModal) return;
+    twinkleGroovinModal.classList.add('hidden');
+    body.classList.remove('overflow-hidden');
+  }
+
+  if (twinkleGroovinImageCard) {
+    twinkleGroovinImageCard.addEventListener('click', openTwinkleGroovinModal);
+    twinkleGroovinImageCard.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openTwinkleGroovinModal();
+      }
+    });
+  }
+
+  if (closeTwinkleGroovinModalBtn) {
+    closeTwinkleGroovinModalBtn.addEventListener('click', closeTwinkleGroovinModalFn);
+  }
+
+  if (twinkleGroovinModal) {
+    twinkleGroovinModal.addEventListener('click', function (event) {
+      if (event.target === twinkleGroovinModal) {
+        closeTwinkleGroovinModalFn();
+      }
+    });
+    twinkleGroovinModal.addEventListener('contextmenu', function (event) {
       event.preventDefault();
     });
   }

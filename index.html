@@ -406,18 +406,63 @@
                     </div>
                   </div>
                   <div
-                    class="flex h-full flex-1 flex-col gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60 hover:transform hover:-translate-y-1 transition-transform coming-soon-card">
-                    <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col"
-                      data-alt="NFT artwork of an Ethernal Golem with an arcane core"
-                      style='background-image: url("img/coming-soon.svg");'>
+                    class="flex h-full flex-1 flex-col gap-3 sm:gap-4 rounded-lg bg-[#1e1933] shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-[240px] sm:min-w-60 hover:transform hover:-translate-y-1 transition-transform active:scale-[0.98]">
+                    <div id="twinkleGroovinImageCard"
+                      class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-primary blur-sm"
+                      tabindex="0" role="button" aria-label="Twinkle Groovin artwork"
+                      style='background-image: url("img/Twinkle Groovin.png");'>
                     </div>
-                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                    <!-- Audio Player -->
+                    <div
+                      class="audio-player flex items-center gap-3 px-3 sm:px-4 py-2 bg-[#292348]/50 rounded-lg mx-3 sm:mx-4 -mt-1"
+                      data-audio="">
+                      <button
+                        class="audio-play-btn flex items-center justify-center w-8 h-8 rounded-full bg-primary hover:bg-primary/80 transition-colors"
+                        aria-label="Play audio">
+                        <svg class="play-icon w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                        <svg class="pause-icon w-4 h-4 text-white hidden" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                        </svg>
+                      </button>
+                      <div class="audio-bars flex items-end gap-[2px] h-6 flex-1">
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 40%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 70%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 50%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 90%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 60%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 80%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 45%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 75%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 55%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full" style="height: 85%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full hidden sm:block"
+                          style="height: 65%"></span>
+                        <span class="audio-bar w-1 bg-primary/60 rounded-full hidden sm:block"
+                          style="height: 50%"></span>
+                      </div>
+                      <span class="audio-time text-xs text-white/60">0:00</span>
+                    </div>
+                    <div class="flex flex-col flex-1 justify-between p-3 sm:p-4 pt-0 gap-3 sm:gap-4">
                       <div class="collection-info flex flex-col flex-1">
-                        <p class="text-white text-base font-medium leading-normal min-h-[3rem]">Ethernal Golem</p>
-                        <p class="text-[#9b92c9] text-sm font-normal leading-normal min-h-[3rem]">Trait: Arcane Core</p>
+                        <p class="text-white text-sm sm:text-base font-medium leading-normal min-h-[3rem]">
+                          Twinkle Groovin</p>
+                        <p class="text-[#9b92c9] text-xs sm:text-sm font-normal leading-normal min-h-[3rem]">Trait:
+                          Audio-Visual NFT /
+                          Twinkle-Groovin Theme / Supply 2100</p>
+                        <div class="mt-auto space-y-1">
+                          <div class="flex items-center justify-between text-xs text-[#9b92c9]">
+                            <span>Sold</span>
+                            <span id="soldText4">0 / 2100</span>
+                          </div>
+                          <div class="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
+                            <div id="soldBar4" class="h-full bg-primary" style="width: 0%"></div>
+                          </div>
+                        </div>
                       </div>
                       <button
-                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#292348] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary transition-colors">
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 sm:h-11 px-4 bg-[#292348] text-white text-xs sm:text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary active:bg-primary/80 transition-colors">
                         <span class="truncate">View Details</span>
                       </button>
                     </div>
@@ -591,19 +636,19 @@
                 vibrant community to get exclusive access to drops, news, and connect with fellow art enthusiasts and
                 collectors.</p>
               <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto px-4">
-                <button
-                  class="flex items-center justify-center gap-2 rounded-lg bg-primary/20 h-12 sm:h-14 px-6 sm:px-8 text-white text-sm nh:text-base font-bold hover:bg-primary/30 active:bg-primary/40 transition-colors w-full sm:w-auto">
+                <a href="https://www.instagram.com/kyoumei_nft/?hl=ja" target="_blank" rel="noopener noreferrer"
+                  class="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] h-12 sm:h-14 px-6 sm:px-8 text-white text-sm sm:text-base font-bold hover:opacity-80 transition-opacity w-full sm:w-64">
                   <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
-                      d="M20.317 4.37a19.792 19.792 0 0 0-4.885-1.515.074.074 0 0 0-.079.037 13.54 13.54 0 0 0-.608 1.25 17.564 17.564 0 0 0-5.487 0 13.54 13.54 0 0 0-.618-1.249.077.077 0 0 0-.078-.037 19.736 19.736 0 0 0-4.885 1.515.07.07 0 0 0-.032.028C.533 9.046-.319 13.58.099 18.058a.082.082 0 0 0 .031.056 19.94 19.94 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 13.78 13.78 0 0 0 1.226-1.994.076.076 0 0 0-.042-.106 13.174 13.174 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01 14.161 14.161 0 0 0 12.062 0 .074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.007.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.04.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.954 19.954 0 0 0 6.002-3.03.077.077 0 0 0 .031-.055c.5-5.177-.838-9.674-3.548-13.66a.061.061 0 0 0-.031-.029ZM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.211 0 2.176 1.095 2.157 2.419 0 1.333-.955 2.419-2.157 2.419Zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.211 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419Z">
+                      d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z">
                     </path>
                   </svg>
-                  <span>Join Discord</span>
-                </button>
+                  <span>Follow on Instagram</span>
+                </a>
                 <a href="https://x.com/kyoumei_nft?s=21&t=qolsWhWADNvOO-R6w1q5uA" target="_blank"
                   rel="noopener noreferrer"
-                  class="flex items-center justify-center gap-2 rounded-lg bg-white/10 h-12 sm:h-14 px-6 sm:px-8 text-white text-sm sm:text-base font-bold hover:bg-white/20 active:bg-white/30 transition-colors w-full sm:w-auto">
+                  class="flex items-center justify-center gap-2 rounded-lg bg-white/10 h-12 sm:h-14 px-6 sm:px-8 text-white text-sm sm:text-base font-bold hover:bg-white/20 active:bg-white/30 transition-colors w-full sm:w-64">
                   <svg class="h-5 w-5 sm:h-6 sm:w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -666,6 +711,24 @@
               </button>
               <img src="img/Crypt Love Letter.png" alt="Crypt Love Letter artwork"
                 class="w-full rounded-lg shadow-2xl border border-white/10" draggable="false" />
+              <div class="no-save-overlay" aria-hidden="true"></div>
+            </div>
+          </div>
+          <!-- Twinkle Groovin Modal -->
+          <div id="twinkleGroovinModal"
+            class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center px-4 hidden z-[60]">
+            <div class="relative max-w-4xl w-full protected-image-wrapper">
+              <button id="closeTwinkleGroovinModal"
+                class="absolute -top-4 -right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2 transition-colors"
+                aria-label="Close image preview">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+              <img src="img/Twinkle Groovin.png" alt="Twinkle Groovin artwork"
+                class="w-full rounded-lg shadow-2xl" draggable="false" />
               <div class="no-save-overlay" aria-hidden="true"></div>
             </div>
           </div>
