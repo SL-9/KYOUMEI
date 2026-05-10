@@ -448,6 +448,10 @@ function applyOperatorBalance(operatorBalance, totalSupply = 2100) {
 // ---------------------------------------------------------------------------
 // HyperScan(Blockscout) API を使って運営ウォレットのNFT保有数を取得し、
 // Sold インジケーターに反映するための処理
+//
+// ※ ERC-1155コントラクトの場合、tokennfttx APIはトランザクションを返さないため、
+//    tokenbalance API（残高直接取得）を使用しています。
+//    Sold数 = 総供給数 - 運営ウォレット残高 で算出します。
 // ---------------------------------------------------------------------------
 
 // 運営ウォレットとNFTコントラクトの設定
@@ -456,11 +460,14 @@ const CONTRACT_ADDRESS = '0x3e9452A9875d1d8f9F8B93423B49928b643f195d';
 const TOTAL_SUPPLY = 2100;
 
 /**
- * HyperScanのBlockscout APIから運営ウォレットのNFT保有数を取得
+ * HyperScanのBlockscout APIから運営ウォレットのNFT残高を直接取得し、
+ * Sold数を計算して反映する
+ * （ERC-1155対応: tokenbalance APIを使用）
  */
 async function fetchOperatorBalance() {
   try {
-    const apiUrl = `https://www.hyperscan.com/api?module=account&action=tokennfttx&address=${OPERATOR_ADDRESS}&contractaddress=${CONTRACT_ADDRESS}&page=1&offset=10000&sort=desc`;
+    // tokenbalance API: 運営ウォレットがこのコントラクトで保有しているトークン数を取得
+    const apiUrl = `https://www.hyperscan.com/api?module=account&action=tokenbalance&contractaddress=${CONTRACT_ADDRESS}&address=${OPERATOR_ADDRESS}&tag=latest`;
 
     const response = await fetch(apiUrl);
     if (!response.ok) {
@@ -469,39 +476,18 @@ async function fetchOperatorBalance() {
 
     const data = await response.json();
 
-    if (data.status === '1' && data.result && Array.isArray(data.result)) {
-      const receivedTokens = data.result.filter(tx =>
-        tx.to && tx.to.toLowerCase() === OPERATOR_ADDRESS.toLowerCase()
-      );
+    if (data.status === '1' && data.result !== null && data.result !== undefined) {
+      const operatorBalance = parseInt(data.result, 10);
 
-      const sentTokens = data.result.filter(tx =>
-        tx.from && tx.from.toLowerCase() === OPERATOR_ADDRESS.toLowerCase()
-      );
-
-      const operatorBalance = receivedTokens.length - sentTokens.length;
-
-      if (typeof applyOperatorBalance === 'function') {
+      if (!isNaN(operatorBalance) && typeof applyOperatorBalance === 'function') {
         applyOperatorBalance(operatorBalance, TOTAL_SUPPLY);
       }
 
       return {
         success: true,
         balance: operatorBalance,
-        received: receivedTokens.length,
-        sent: sentTokens.length,
         totalSupply: TOTAL_SUPPLY,
-      };
-    } else if (data.status === '0' && data.message === 'No transactions found') {
-      if (typeof applyOperatorBalance === 'function') {
-        applyOperatorBalance(0, TOTAL_SUPPLY);
-      }
-
-      return {
-        success: true,
-        balance: 0,
-        received: 0,
-        sent: 0,
-        totalSupply: TOTAL_SUPPLY,
+        sold: TOTAL_SUPPLY - operatorBalance,
       };
     } else {
       throw new Error(`API Error: ${data.message || 'Unknown error'}`);
