@@ -168,7 +168,8 @@
 
   /**
    * イベントをAPIに送信する
-   * navigator.sendBeacon が使えればそちらを優先
+   * クロスオリジンでも確実に送信できるよう、認証情報を付けない
+   * fetch + keepalive を使用する
    * 失敗してもエラーを外部に出さない（サイト動作を妨げない）
    */
   function sendEvent(payload) {
@@ -178,18 +179,18 @@
     var data = JSON.stringify(payload);
 
     try {
-      // sendBeacon はページを離れる時でも信頼性が高い
-      if (navigator.sendBeacon) {
-        var blob = new Blob([data], { type: 'application/json' });
-        navigator.sendBeacon(url, blob);
-      } else {
-        // フォールバック: fetch with keepalive
+      if (window.fetch) {
         fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: data,
           keepalive: true,
+          credentials: 'omit',
         }).catch(function () { /* サイレントに失敗 */ });
+      } else if (navigator.sendBeacon) {
+        // 古いブラウザ向けフォールバック
+        var blob = new Blob([data], { type: 'application/json' });
+        navigator.sendBeacon(url, blob);
       }
     } catch (e) {
       /* サイレントに失敗 - サイトの動作を妨げない */
