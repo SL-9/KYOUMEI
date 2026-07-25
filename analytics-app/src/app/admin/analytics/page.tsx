@@ -105,7 +105,7 @@ const DEVICE_LABELS: Record<string, string> = {
 // 小コンポーネント
 // ============================================================
 
-type IconName = 'eye' | 'user' | 'session' | 'wave' | 'trend' | 'chart' | 'warning'
+type IconName = 'eye' | 'user' | 'session' | 'wave' | 'trend' | 'chart' | 'warning' | 'trash'
 
 function DashboardIcon({ name, className = 'h-5 w-5' }: { name: IconName; className?: string }) {
   const paths: Record<IconName, React.ReactNode> = {
@@ -152,6 +152,14 @@ function DashboardIcon({ name, className = 'h-5 w-5' }: { name: IconName; classN
         <path d="M10.3 4.1 2.8 17.2A2 2 0 0 0 4.5 20h15a2 2 0 0 0 1.7-2.8L13.7 4.1a2 2 0 0 0-3.4 0Z" />
         <path d="M12 9v4" />
         <path d="M12 17h.01" />
+      </>
+    ),
+    trash: (
+      <>
+        <path d="M4 7h16" />
+        <path d="M9 7V4h6v3" />
+        <path d="m6 7 1 13h10l1-13" />
+        <path d="M10 11v5M14 11v5" />
       </>
     ),
   }
@@ -311,6 +319,9 @@ export default function AnalyticsDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [loggingOut, setLoggingOut] = useState(false)
+  const [showResetConfirm, setShowResetConfirm] = useState(false)
+  const [resetting, setResetting] = useState(false)
+  const [resetMessage, setResetMessage] = useState<string | null>(null)
 
   // データ取得
   const fetchData = useCallback(async () => {
@@ -350,6 +361,35 @@ export default function AnalyticsDashboard() {
       await supabase.auth.signOut()
     }
     router.push('/admin/login')
+  }
+
+  const handleReset = async () => {
+    setResetting(true)
+    setResetMessage(null)
+    try {
+      const res = await fetch('/api/admin/analytics', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ range, confirmation: 'RESET_ANALYTICS' }),
+      })
+      if (res.status === 401) {
+        router.push('/admin/login')
+        return
+      }
+      const result = await res.json()
+      if (!res.ok) {
+        throw new Error(result.error || `HTTP ${res.status}`)
+      }
+      setShowResetConfirm(false)
+      setResetMessage(`${rangeLabels[range]}の数値をリセットしました`)
+      await fetchData()
+    } catch (err) {
+      setResetMessage(
+        `リセットに失敗しました。${err instanceof Error ? err.message : ''}`
+      )
+    } finally {
+      setResetting(false)
+    }
   }
 
   // 期間ラベル
@@ -456,12 +496,35 @@ export default function AnalyticsDashboard() {
               </button>
             ))}
           </div>
-          {data && (
-            <p className="text-[#9b92c9]/50 text-xs">
-              最終更新: {formatUpdatedAt(data.updatedAt)}
-            </p>
-          )}
+          <div className="flex items-center gap-3">
+            {data && (
+              <p className="text-[#9b92c9]/50 text-xs">
+                最終更新: {formatUpdatedAt(data.updatedAt)}
+              </p>
+            )}
+            <button
+              onClick={() => {
+                setResetMessage(null)
+                setShowResetConfirm(true)
+              }}
+              disabled={loading || !data}
+              className="flex items-center gap-1.5 rounded-lg border border-red-400/25 bg-red-400/5 px-3 py-1.5 text-xs text-red-300 transition-colors hover:bg-red-400/10 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <DashboardIcon name="trash" className="h-3.5 w-3.5" />
+              数値をリセット
+            </button>
+          </div>
         </div>
+
+        {resetMessage && (
+          <div className={`mb-4 rounded-lg border px-4 py-3 text-xs ${
+            resetMessage.startsWith('リセットに失敗')
+              ? 'border-red-400/30 bg-red-400/10 text-red-200'
+              : 'border-emerald-400/30 bg-emerald-400/10 text-emerald-200'
+          }`}>
+            {resetMessage}
+          </div>
+        )}
 
         {/* エラー表示 */}
         {error && !loading && (
@@ -785,6 +848,44 @@ export default function AnalyticsDashboard() {
           </div>
         )}
       </main>
+
+      {showResetConfirm && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="reset-dialog-title"
+        >
+          <div className="w-full max-w-md rounded-2xl border border-red-400/25 bg-[#17132c] p-6 shadow-2xl">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl border border-red-400/25 bg-red-400/10 text-red-300">
+              <DashboardIcon name="warning" className="h-5 w-5" />
+            </div>
+            <h2 id="reset-dialog-title" className="text-lg font-bold text-white">
+              {rangeLabels[range]}の数値をリセットしますか？
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-[#b4acd9]">
+              選択期間内のアクセス解析データをすべて削除します。この操作は取り消せません。
+              リセット後に発生したアクセスは通常どおり記録されます。
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setShowResetConfirm(false)}
+                disabled={resetting}
+                className="rounded-lg border border-white/10 px-4 py-2 text-sm text-[#b4acd9] transition-colors hover:bg-white/5 disabled:opacity-50"
+              >
+                キャンセル
+              </button>
+              <button
+                onClick={handleReset}
+                disabled={resetting}
+                className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-400 disabled:cursor-wait disabled:opacity-60"
+              >
+                {resetting ? 'リセット中...' : '削除してリセット'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
