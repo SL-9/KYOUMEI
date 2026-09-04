@@ -5,6 +5,17 @@ import { cookies } from 'next/headers'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const SUPABASE_TIMEOUT_MS = 8000
+
+/** Supabase障害時にもAPI RouteがVercelの実行上限まで待ち続けないようにする。 */
+function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), SUPABASE_TIMEOUT_MS)
+
+  return fetch(input, { ...init, signal: controller.signal }).finally(() => {
+    clearTimeout(timeoutId)
+  })
+}
 
 /**
  * サービスロールキーを使ったサーバーサイド専用クライアント
@@ -12,6 +23,7 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
  */
 export function createServiceRoleClient() {
   return createClient(supabaseUrl, supabaseServiceRoleKey, {
+    global: { fetch: fetchWithTimeout },
     auth: {
       autoRefreshToken: false,
       persistSession: false,
@@ -26,6 +38,7 @@ export function createServiceRoleClient() {
 export async function createServerSideClient() {
   const cookieStore = await cookies()
   return createServerClient(supabaseUrl, supabaseAnonKey, {
+    global: { fetch: fetchWithTimeout },
     cookies: {
       getAll() {
         return cookieStore.getAll()
