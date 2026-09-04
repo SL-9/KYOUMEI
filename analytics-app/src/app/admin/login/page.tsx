@@ -5,6 +5,17 @@ import { createBrowserClient } from '@supabase/ssr'
 import { useRouter, useSearchParams } from 'next/navigation'
 import KyoumeiMark from '@/components/KyoumeiMark'
 
+const AUTH_TIMEOUT_MS = 8000
+
+function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit) {
+  const controller = new AbortController()
+  const timeoutId = window.setTimeout(() => controller.abort(), AUTH_TIMEOUT_MS)
+
+  return fetch(input, { ...init, signal: controller.signal }).finally(() => {
+    window.clearTimeout(timeoutId)
+  })
+}
+
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -24,7 +35,8 @@ export default function LoginPage() {
   const supabase = useMemo(
     () => createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { global: { fetch: fetchWithTimeout } }
     ),
     []
   )
@@ -50,23 +62,30 @@ export default function LoginPage() {
     setLoading(true)
     setErrorMsg(null)
 
-    const { error: loginError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    try {
+      const { error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-    if (loginError) {
+      if (loginError) {
+        setErrorMsg(
+          loginError.message === 'Invalid login credentials'
+            ? 'メールアドレスまたはパスワードが正しくありません。'
+            : loginError.message
+        )
+        return
+      }
+
+      router.push('/admin/analytics')
+      router.refresh()
+    } catch {
       setErrorMsg(
-        loginError.message === 'Invalid login credentials'
-          ? 'メールアドレスまたはパスワードが正しくありません。'
-          : loginError.message
+        '認証サービスに接続できません。Supabaseプロジェクトの稼働状態と接続設定を確認してください。'
       )
+    } finally {
       setLoading(false)
-      return
     }
-
-    router.push('/admin/analytics')
-    router.refresh()
   }
 
   return (
