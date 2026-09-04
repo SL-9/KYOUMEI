@@ -101,6 +101,19 @@ const DEVICE_LABELS: Record<string, string> = {
   unknown: '不明',
 }
 
+const API_TIMEOUT_MS = 15000
+
+async function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit) {
+  const controller = new AbortController()
+  const timeoutId = window.setTimeout(() => controller.abort(), API_TIMEOUT_MS)
+
+  try {
+    return await fetch(input, { ...init, signal: controller.signal })
+  } finally {
+    window.clearTimeout(timeoutId)
+  }
+}
+
 // ============================================================
 // 小コンポーネント
 // ============================================================
@@ -328,7 +341,7 @@ export default function AnalyticsDashboard() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`/api/admin/analytics?range=${range}`, {
+      const res = await fetchWithTimeout(`/api/admin/analytics?range=${range}`, {
         cache: 'no-store',
       })
       if (res.status === 401) {
@@ -341,7 +354,11 @@ export default function AnalyticsDashboard() {
       const json = await res.json()
       setData(json)
     } catch (err) {
-      setError(`データの取得に失敗しました。${err instanceof Error ? err.message : ''}`)
+      setError(
+        err instanceof DOMException && err.name === 'AbortError'
+          ? 'データ取得がタイムアウトしました。Supabaseの接続設定を確認してください。'
+          : `データの取得に失敗しました。${err instanceof Error ? err.message : ''}`
+      )
     } finally {
       setLoading(false)
     }
@@ -367,7 +384,7 @@ export default function AnalyticsDashboard() {
     setResetting(true)
     setResetMessage(null)
     try {
-      const res = await fetch('/api/admin/analytics', {
+      const res = await fetchWithTimeout('/api/admin/analytics', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ range, confirmation: 'RESET_ANALYTICS' }),
