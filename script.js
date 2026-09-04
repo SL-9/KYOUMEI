@@ -446,41 +446,56 @@ function applyOperatorBalance(operatorBalance, totalSupply = 2100) {
 }
 
 // ---------------------------------------------------------------------------
-// HyperScan(Blockscout) API を使って運営ウォレットのNFT保有数を取得し、
+// HyperEVM RPC を使って運営ウォレットのNFT保有数を取得し、
 // Sold インジケーターに反映するための処理
 //
-// ※ ERC-1155コントラクトの場合、tokennfttx APIはトランザクションを返さないため、
-//    tokenbalance API（残高直接取得）を使用しています。
+// ERC-1155 の balanceOf(address, tokenId) を eth_call で直接呼び出します。
 //    Sold数 = 総供給数 - 運営ウォレット残高 で算出します。
 // ---------------------------------------------------------------------------
 
 // 運営ウォレットとNFTコントラクトの設定
 const OPERATOR_ADDRESS = '0x56e143ca73d671a8db81879ec6082b43c8ef1320';
 const CONTRACT_ADDRESS = '0x3e9452A9875d1d8f9F8B93423B49928b643f195d';
+const TOKEN_ID = 1;
 const TOTAL_SUPPLY = 2100;
+const HYPEREVM_RPC_URL = 'https://rpc.hyperliquid.xyz/evm';
 
 /**
- * HyperScanのBlockscout APIから運営ウォレットのNFT残高を直接取得し、
+ * HyperEVM RPCから運営ウォレットのNFT残高を直接取得し、
  * Sold数を計算して反映する
- * （ERC-1155対応: tokenbalance APIを使用）
+ * （ERC-1155: balanceOf(address, tokenId)）
  */
 async function fetchOperatorBalance() {
   try {
-    // tokenbalance API: 運営ウォレットがこのコントラクトで保有しているトークン数を取得
-    const apiUrl = `https://www.hyperscan.com/api?module=account&action=tokenbalance&contractaddress=${CONTRACT_ADDRESS}&address=${OPERATOR_ADDRESS}&tag=latest`;
+    // balanceOf(address,uint256) のselector + 32byte詰めしたaddress + tokenId
+    const balanceOfSelector = '00fdd58e';
+    const encodedAddress = OPERATOR_ADDRESS.toLowerCase().replace(/^0x/, '').padStart(64, '0');
+    const encodedTokenId = TOKEN_ID.toString(16).padStart(64, '0');
+    const callData = `0x${balanceOfSelector}${encodedAddress}${encodedTokenId}`;
 
-    const response = await fetch(apiUrl);
+    const response = await fetch(HYPEREVM_RPC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_call',
+        params: [{ to: CONTRACT_ADDRESS, data: callData }, 'latest'],
+      }),
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
 
-    if (data.status === '1' && data.result !== null && data.result !== undefined) {
-      const operatorBalance = parseInt(data.result, 10);
+    if (data.result && !data.error) {
+      const operatorBalance = Number(BigInt(data.result));
 
-      if (!isNaN(operatorBalance) && typeof applyOperatorBalance === 'function') {
+      if (Number.isSafeInteger(operatorBalance)) {
         applyOperatorBalance(operatorBalance, TOTAL_SUPPLY);
+      } else {
+        throw new Error('Operator balance is outside the safe integer range');
       }
 
       return {
@@ -490,7 +505,7 @@ async function fetchOperatorBalance() {
         sold: TOTAL_SUPPLY - operatorBalance,
       };
     } else {
-      throw new Error(`API Error: ${data.message || 'Unknown error'}`);
+      throw new Error(`RPC Error: ${data.error?.message || 'Unknown error'}`);
     }
   } catch (error) {
     console.error('Failed to fetch operator balance:', error);

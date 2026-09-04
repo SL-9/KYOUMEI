@@ -14,7 +14,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(
-    error === 'unauthorized' ? '許可されていないメールアドレスです。' : null
+    error === 'unauthorized'
+      ? '許可されていないメールアドレスです。'
+      : error === 'auth_unavailable'
+        ? '認証サービスへの接続がタイムアウトしました。時間をおいて再度ログインしてください。'
+        : null
   )
 
   const supabase = useMemo(
@@ -28,7 +32,8 @@ export default function LoginPage() {
   // 既にログイン済みの場合はダッシュボードへ
   useEffect(() => {
     const checkSession = async () => {
-      if (error === 'unauthorized') {
+      if (error === 'unauthorized' || error === 'auth_unavailable') {
+        if (error === 'auth_unavailable') return
         await supabase.auth.signOut()
         return
       }
